@@ -79,56 +79,56 @@
                     android:transitionName="@string/trans_anim_search_tv"/>
 
             </RelativeLayout>
-
         </LinearLayout>
     </RelativeLayout>
-    <RelativeLayout
+
+    <ScrollView
+        android:layout_marginLeft="@dimen/dimen_size_15"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/dimen_size_15">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="50px"
-                android:text="历史搜素记录" />
-
-            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:text="历史记录"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="344dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:textSize="50px"
+                    android:orientation="horizontal"
+                    android:divider="@drawable/spacer_medium"
+                    android:showDividers="middle">
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="测试机哦"/>
-                    <TextView
+                        android:background="#FFFFFF"
+                        android:text="测试" />
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="50px"
-                        android:text="测试机哦"/>
-
+                        android:background="#FFFFFF"
+                        android:text="测试" />
                 </LinearLayout>
-
-            </ScrollView>
+            </RelativeLayout>
+            <Button
+                android:id="@+id/btn_clear_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:text="清除历史记录" />
         </LinearLayout>
+    </ScrollView>
 
-        </LinearLayout>
 
 
-    </RelativeLayout>
 
 
     <View

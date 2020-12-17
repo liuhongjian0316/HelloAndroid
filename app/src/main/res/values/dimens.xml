@@ -140,6 +140,8 @@
     <dimen name="search_target_height">250dp</dimen>
     <dimen name="search_init_width">500dp</dimen>
 
+    <!--历史记录 LineLayout 之间的距离-->
+    <dimen name="spacing_medium">20dp</dimen>
 
 
 
