@@ -6,8 +6,10 @@
 
 
     <View
+        android:id="@+id/v_yellow"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="#FFF4C14A"/>
+        android:background="#FFF4C14A">
+    </View>
 
 </LinearLayout>

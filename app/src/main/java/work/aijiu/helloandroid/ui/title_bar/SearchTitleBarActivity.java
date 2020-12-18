@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import work.aijiu.helloandroid.R;
+import work.aijiu.helloandroid.base.Constant;
 import work.aijiu.helloandroid.utils.ResourceUtils;
 import work.aijiu.helloandroid.widget.title_bar.SearchTitleBar;
 import work.aijiu.helloandroid.widget.title_bar.adapter.SearchTitleBarAdapter;
@@ -109,6 +112,11 @@ public class SearchTitleBarActivity extends AppCompatActivity
 
     private void initAdapter(){
         adapter = new SearchTitleBarAdapter(this, dataList);
+        Log.e(Constant.LOG_TAG,(adapter == null)+"");
+        adapter.setOnItemClickListener(position -> {
+            Toast.makeText(SearchTitleBarActivity.this, "click " + position, Toast.LENGTH_SHORT).show();
+        });
+        adapter.setOnItemLongClickListener(position -> Toast.makeText(SearchTitleBarActivity.this, "long click " + position, Toast.LENGTH_SHORT).show());
         recyclerView.setAdapter(adapter);
     }
 

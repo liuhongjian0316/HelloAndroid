@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import work.aijiu.helloandroid.R;
+import work.aijiu.helloandroid.base.Constant;
 import work.aijiu.helloandroid.ui.title_bar.SearchDetailActivity;
 import work.aijiu.helloandroid.ui.title_bar.SearchTitleBarActivity;
 import work.aijiu.helloandroid.utils.ComponentUtils;
@@ -90,7 +93,22 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
                 setupTitleBar();
             }
         });
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                return false;
+            }
 
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
 
 
     }
@@ -142,8 +160,7 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
 
     private void initDatas(){
         dataList = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
             dataList.add(new Object());
         }
     }
