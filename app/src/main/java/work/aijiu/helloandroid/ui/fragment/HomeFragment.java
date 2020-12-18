@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +53,7 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
     private int resetTagetHeight = 0;
     private View firstVisibleView = null;
     private int searchBarState = 0;// 0初始状态  1展开状态
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,9 +90,13 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
                 setupTitleBar();
             }
         });
+
+
+
     }
 
     public void setupTitleBar() {
+
         if (recyclerView == null || titleBar == null) {
             return;
         }
@@ -125,6 +132,7 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
         } else {
             titleBar.setBackgroundColor(Color.argb(255, 255, 255, 255));
         }
+
     }
 
     private void initAdapter(){
@@ -162,7 +170,6 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
     public void onStart() {
         super.onStart();
     }
-
 
 
 }

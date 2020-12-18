@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
@@ -37,9 +38,11 @@
                     android:src="@mipmap/search_icon"
                     android:transitionName="@string/trans_anim_search_iv"/>
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/search_edit"
-                    android:layout_width="0dp"
+                    android:completionThreshold="1"
+                    android:dropDownHorizontalOffset="-10dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left|center_vertical"
@@ -52,6 +55,7 @@
                     android:ellipsize="end"
                     android:textColor="#FF000000"
                     android:textSize="@dimen/font_size_13"
+                    android:inputType="textNoSuggestions"
                     android:transitionName="@string/trans_anim_search_edit"/>
 
             </LinearLayout>
@@ -82,52 +86,21 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_marginLeft="@dimen/dimen_size_15"
+    <!--max_select为最大标签数-->
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/history_flowlayout"
+        zhy:max_select="10"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+    </com.zhy.view.flowlayout.TagFlowLayout>
+
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="历史记录"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="344dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:divider="@drawable/spacer_medium"
-                    android:showDividers="middle">
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:text="测试" />
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:text="测试" />
-                </LinearLayout>
-            </RelativeLayout>
-            <Button
-                android:id="@+id/btn_clear_history"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:text="清除历史记录" />
-        </LinearLayout>
-    </ScrollView>
-
-
+        android:layout_height="wrap_content"
+        android:text="清楚历史记录"
+        android:id="@+id/btn_clear_history">
+    </Button>
 
 
 

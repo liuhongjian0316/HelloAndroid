@@ -8,11 +8,12 @@ android {
 
     defaultConfig {
         applicationId "work.aijiu.helloandroid"
+        // Required when setting minSdkVersion to 20 or lower
+        multiDexEnabled true
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -23,6 +24,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -45,6 +47,13 @@ dependencies {
     //底部导航
     implementation "androidx.navigation:navigation-fragment:2.2.1"
     implementation "androidx.navigation:navigation-ui:2.2.1"
+    //流式布局
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+    //RXJAVA
+    //RXANDROID
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
 
 }

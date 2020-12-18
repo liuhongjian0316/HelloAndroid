@@ -53,7 +53,7 @@ public class HistoryDao {
         if (getIdByName(name)==0) {
             values.put("name", name);
 
-            db.insert(tabHistory, null, values);
+           db.insert(tabHistory, null, values);
         } else {
             db.update(tabHistory,values,"name = ?", new String[]{name});
         }
@@ -65,14 +65,13 @@ public class HistoryDao {
      */
     public void delHistory(int _id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        db.delete(tabHistory,"_id"+_id,null);
+        db.delete(tabHistory,"_id="+_id,null);
     }
 
     /**
      * 删除全部历史记录
      * @param historyRecords
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void delAllHistory(List<HistoryRecord> historyRecords){
         historyRecords.forEach(i-> delHistory(i.getId()));
     }
@@ -130,6 +129,29 @@ public class HistoryDao {
         int count = cursor.getInt(0);
         cursor.close();
         return count;
+    }
+
+
+    /**
+     * 获取最近n条
+     * @param num
+     * @return
+     */
+    public List<HistoryRecord> getCurrentHistory(int num){
+        List<HistoryRecord> result = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from history  order by lasttime desc limit 0,"+num+" ;", null);
+        while(cursor.moveToNext()){
+            //get _id
+            int _id = cursor.getInt(0);
+            //get name
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            //add entity
+            result.add(new HistoryRecord(_id,name));
+        }
+        cursor.close();
+        SystemClock.sleep(1000);// 休眠2秒，数据比较多，比较耗时的情况
+        return result;
     }
 
 

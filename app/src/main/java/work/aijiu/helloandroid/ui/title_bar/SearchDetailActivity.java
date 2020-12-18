@@ -1,30 +1,57 @@
 package work.aijiu.helloandroid.ui.title_bar;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.util.Consumer;
+
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import work.aijiu.helloandroid.R;
+import work.aijiu.helloandroid.base.Constant;
 import work.aijiu.helloandroid.dao.history_record.HistoryDao;
 import work.aijiu.helloandroid.model.HistoryRecord;
-import work.aijiu.helloandroid.widget.history_record.NameHisAdapter;
+
+
+import io.reactivex.ObservableOnSubscribe;
+import work.aijiu.helloandroid.widget.dialog.ProgressDialog;
 
 /**
  * @author aijiu
@@ -38,11 +65,13 @@ public class SearchDetailActivity extends AppCompatActivity implements View.OnCl
 
     List<HistoryRecord> historyRecords = new ArrayList<>();
 
-    private NameHisAdapter adapter;
-
-    private Handler handler;
-
-    private int HAS_NEW_MESSAGE_FLAG = 0xff;
+    private TagAdapter mRecordsAdapter;
+    //自动提示输入框 数组适配器
+    private ArrayAdapter<String> autoTextAdapter;
+    //自动提示数据
+    private List<String> autoData;
+    //默认加载历史记录数
+    private final int DEFAULT_RECORD_NUMBER = 10;
 
     /**********************************组件初始化*********************************************/
     @BindView(R.id.search_cancle_layout)
@@ -51,9 +80,15 @@ public class SearchDetailActivity extends AppCompatActivity implements View.OnCl
     @BindView(R.id.btn_clear_history)
     Button btn_clear_history;
 
-    private RecyclerView rvHistory;
+    @BindView(R.id.history_flowlayout)
+    TagFlowLayout history_flowlayout;
 
-
+    @BindView(R.id.search_edit)
+    AutoCompleteTextView searchEdit;
+    /**
+     * 加载框
+     */
+    private ProgressDialog dialog;
 
 
 
@@ -66,8 +101,12 @@ public class SearchDetailActivity extends AppCompatActivity implements View.OnCl
         search_layout.setOnClickListener(this);
         btn_clear_history.setOnClickListener(this);
 
+        //初始化
+        initAutoData();
         init();
-        initHistoryData();
+        initData();
+        initEvent();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null){
             //隐藏标题栏
@@ -80,80 +119,159 @@ public class SearchDetailActivity extends AppCompatActivity implements View.OnCl
      * 初始化
      */
     public void init(){
+        //初始化数据库
         historyDao = HistoryDao.getInstance(this);
 
-        handler = new Handler(){
-            @SuppressLint("HandlerLeak")
-            public void handleMessage(Message msg){
-                switch (msg.what){
-                    case HAS_NEW_MESSAGE_FLAG:
-                        if(historyRecords.size() == 0){
+        //初始化数据
+        historyRecords = historyDao.getCurrentHistory(DEFAULT_RECORD_NUMBER);
 
-                        }else{
-                            if (adapter == null) { //第一次加载
-                                LinearLayoutManager layoutmanager = new LinearLayoutManager(SearchDetailActivity.this);
-                                //设置RecyclerView 布局
-                                rvHistory = new RecyclerView(SearchDetailActivity.this);
-                                rvHistory.setLayoutManager(layoutmanager);
-                                adapter = new NameHisAdapter(SearchDetailActivity.this, historyRecords);
-                                rvHistory.setAdapter(adapter);
-                                adapter.setOnDelClickListener(new NameHisAdapter.OnDelClickListener() {
-                                    @Override
-                                    public void onDelClick(View view, int position, int count) {
-                                        // 删除当前历史记录     historyDao.delHistory(historyDao.getIDByName(beans.get(position).getName().toString().trim()));
-                                        historyRecords.remove(position);
-                                        adapter.notifyDataSetChanged();
+        autoTextAdapter = new ArrayAdapter<String>(SearchDetailActivity.this,
+                android.R.layout.simple_spinner_item, autoData);
 
-                                    }
-                                });
-                                adapter.setOnItemClickListener(new NameHisAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(View view, int position) {
-                                        // 获得对应名称
-                                        String name= historyRecords.get(position).getName();
+        searchEdit.setAdapter(autoTextAdapter);
 
-                                        // 添加历史记录
-                                        historyDao.addHistory(historyRecords.get(position).getName());
+        //加载框
+        dialog = ProgressDialog.createDialog(SearchDetailActivity.this);
+        dialog.setMessage("数据加载中...");
 
 
-                                    }
-                                });
-                            } else {
-                                //追加数据
-                                adapter.notifyDataSetChanged();// 刷新listView 否则仍会从头开始 显示
-                            }
-                            llData.setVisibility(View.VISIBLE);
-                            vNodata.setVisibility(View.GONE);
-                        }
-                        break;
-                }
-            }
-        };
     }
 
     /**
-     * 初始化历史记录
+     * 初始化历史数据
      */
-    public void initHistoryData(){
-        new Thread(){
-            @Override
-            public void run() {
-                if(historyRecords == null){
-                    historyRecords =historyDao.getAllHistoryDate();
-                }else {
-                    historyRecords.clear();
-                    historyRecords.addAll(historyDao.getAllHistoryDate());
-                }
+    public void initData(){
+        //初始化适配器
+        mRecordsAdapter = new TagAdapter<HistoryRecord>(historyRecords) {
 
-                Message msg = Message.obtain();
-                msg.what = HAS_NEW_MESSAGE_FLAG;
-                handler.sendMessage(msg);
+            @Override
+            public View getView(FlowLayout parent, int position, HistoryRecord historyRecord) {
+                TextView tv = (TextView) LayoutInflater.from(SearchDetailActivity.this).inflate(R.layout.tv_history,
+                        history_flowlayout, false);
+                //为标签设置对应的内容
+                tv.setText(historyRecord.getName());
+                return tv;
             }
-        }.start();
+        };
+        history_flowlayout.setAdapter(mRecordsAdapter);
+    }
+
+    /**
+     * 初始化事件
+     */
+    public void initEvent(){
+        //回车事件监听
+        searchEdit.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //这里注意要作判断处理，ActionDown、ActionUp都会回调到这里，不作处理的话就会调用两次
+                if (KeyEvent.KEYCODE_ENTER == keyCode && KeyEvent.ACTION_DOWN == event.getAction()) {
+                    Log.e(Constant.LOG_TAG,"回车执行");
+                    showProgressDialog();
+
+                    //将搜索的内容放到数据库中
+                    historyDao.addHistory(searchEdit.getText().toString());
+
+                    //延时两秒（模拟真实环境）
+                    ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+                    cachedThreadPool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                                if(dialog != null){
+                                    dialog.dismiss();
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //条目点击监听
+        searchEdit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showProgressDialog();
+                //将搜索的内容放到数据库中
+                historyDao.addHistory(autoTextAdapter.getItem(position).toString());
+                //延时两秒（模拟真实环境）
+                ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+                cachedThreadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                            if(dialog != null){
+                                dialog.dismiss();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
+        /**
+         * 输入框的监听
+         */
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.e(Constant.LOG_TAG,"输入框改变监听");
+            }
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                Log.e(Constant.LOG_TAG,"输入框改变之前监听");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.e(Constant.LOG_TAG,"输入框改变之后监听");
+            }
+        });
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    /**
+     * 初始化自动文本数据
+     */
+    public void initAutoData(){
+        autoData = new ArrayList<>();
+        autoData.add("你好");
+        autoData.add("你好啊");
+        autoData.add("你好亲爱的");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你好程序员");
+        autoData.add("你不");
+        autoData.add("你不豪");
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -163,10 +281,22 @@ public class SearchDetailActivity extends AppCompatActivity implements View.OnCl
             case R.id.btn_clear_history:
                 //清除全部记录
                 historyDao.delAllHistory(historyRecords);
+                init();
                 break;
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
+
+    /**
+     * 显示进度框
+     */
+    public void showProgressDialog(){
+        dialog.show();
+    }
 
 }
