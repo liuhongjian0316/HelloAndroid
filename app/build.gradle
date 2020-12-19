@@ -54,6 +54,8 @@ dependencies {
     //RXANDROID
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    //解决android4.4分包机制
+    implementation 'com.android.support:multidex:1.0.1'
 
 
 }
