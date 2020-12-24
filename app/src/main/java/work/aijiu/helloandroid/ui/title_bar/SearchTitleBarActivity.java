@@ -111,9 +111,7 @@ public class SearchTitleBarActivity extends AppCompatActivity
     }
 
     private void initAdapter(){
-        Log.e("测试","走着1");
         adapter = new SearchTitleBarAdapter(this, dataList);
-        Log.e(Constant.LOG_TAG,(adapter == null)+"走着2");
         adapter.setOnItemClickListener(position -> {
             Toast.makeText(SearchTitleBarActivity.this, "click " + position, Toast.LENGTH_SHORT).show();
         });

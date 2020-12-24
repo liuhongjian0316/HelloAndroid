@@ -1,6 +1,7 @@
 package work.aijiu.helloandroid.ui.fragment;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,6 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +38,7 @@ import work.aijiu.helloandroid.utils.ComponentUtils;
 import work.aijiu.helloandroid.utils.ResourceUtils;
 import work.aijiu.helloandroid.widget.title_bar.SearchTitleBar;
 import work.aijiu.helloandroid.widget.title_bar.adapter.SearchTitleBarAdapter;
+import work.aijiu.helloandroid.widget.viewpager.CommonViewPager;
 
 /**
  * @author aijiu
@@ -48,6 +53,9 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
 
     @BindView(R.id.search_title_bar)
     SearchTitleBar titleBar;
+
+//    @BindView(R.id.activity_common_view_pager)
+    CommonViewPager  mCommonViewPager;
 
     private SearchTitleBarAdapter adapter = null;
     private ArrayList<Object> dataList = null;
@@ -155,6 +163,10 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
 
     private void initAdapter(){
         adapter = new SearchTitleBarAdapter(getActivity(), dataList);
+        adapter.setOnItemClickListener(position -> {
+            Toast.makeText(getActivity(), "click " + position, Toast.LENGTH_SHORT).show();
+        });
+        adapter.setOnItemLongClickListener(position -> Toast.makeText(getActivity(), "long click " + position, Toast.LENGTH_SHORT).show());
         recyclerView.setAdapter(adapter);
     }
 
@@ -182,6 +194,8 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
             startActivity(intent);
         }
     }
+
+
 
     @Override
     public void onStart() {
