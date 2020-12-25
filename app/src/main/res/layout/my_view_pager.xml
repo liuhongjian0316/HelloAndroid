@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- ViewPager-->
+    android:layout_height="match_parent"
+    >
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/common_view_pager"
+
+    <work.aijiu.helloandroid.widget.viewpager.adapter.MyViewPager
+        android:id="@+id/shuffling"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- 指示器 indicatorView-->
-    <work.aijiu.helloandroid.widget.viewpager.CircleIndicatorView
-        android:id="@+id/common_view_pager_indicator_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/points"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        app:indicatorSelectColor="@android:color/white"
-        app:indicatorColor="@android:color/darker_gray"
-        app:fill_mode="none"
-        app:indicatorSpace="5dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+
+
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,8 @@ import work.aijiu.helloandroid.utils.ComponentUtils;
 import work.aijiu.helloandroid.utils.ResourceUtils;
 import work.aijiu.helloandroid.widget.title_bar.SearchTitleBar;
 import work.aijiu.helloandroid.widget.title_bar.adapter.SearchTitleBarAdapter;
-import work.aijiu.helloandroid.widget.viewpager.CommonViewPager;
+import work.aijiu.helloandroid.widget.viewpager.adapter.MyViewPager;
+import work.aijiu.helloandroid.widget.viewpager.adapter.ShufflingAdapter;
 
 /**
  * @author aijiu
@@ -48,14 +52,33 @@ import work.aijiu.helloandroid.widget.viewpager.CommonViewPager;
 public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTitleBarListener{
 
 
+    private static final String TAG = "MainActivity";
+
+    private MyViewPager mShuffling;
+
+    private ShufflingAdapter mShufflingAdapter;
+    private static List<Integer> sList = new ArrayList<>();
+    private boolean mIsTouch = false;
+
+    static {
+        sList.add(R.drawable.p1);
+        sList.add(R.drawable.p2);
+        sList.add(R.drawable.p3);
+        sList.add(R.drawable.p4);
+        sList.add(R.drawable.p5);
+        sList.add(R.drawable.p6);
+        sList.add(R.drawable.p7);
+    }
+
+    private Handler mHandler;
+    private LinearLayout mLinearLayout;
+
     @BindView(R.id.recyler_view)
     RecyclerView recyclerView;
 
     @BindView(R.id.search_title_bar)
     SearchTitleBar titleBar;
 
-//    @BindView(R.id.activity_common_view_pager)
-    CommonViewPager  mCommonViewPager;
 
     private SearchTitleBarAdapter adapter = null;
     private ArrayList<Object> dataList = null;
@@ -69,6 +92,7 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
 
@@ -76,6 +100,14 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container,false);
+
+        if (view == null) {
+            Log.i("FragmentA", " onCreateView:view is null");
+        } else {
+            Log.i("FragmentA", "onCreateView:view is NOOOOOOOOOOOOOOOOT null");
+        }
+
+
         ButterKnife.bind(this,view);
         tagetHeight = (int) (ResourceUtils.getResourcesDimension(R.dimen.search_target_height) * 0.45f);
         resetTagetHeight = (int) (ResourceUtils.getResourcesDimension(R.dimen.search_target_height) * 0.15f);
@@ -84,12 +116,62 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
+
+
+        //        1.找到ViewPager组件
+        mShuffling = (MyViewPager)getActivity().findViewById(R.id.shuffling);
+        mShuffling.setOnViewPagerTouchListen(new MyViewPager.OnViewPagerTouchListen() {
+            @Override
+            public void onViewPagerTouch(boolean isTouch) {
+                mIsTouch = isTouch;
+            }
+        });
+//        2.设置适配器
+        mShufflingAdapter = new ShufflingAdapter();
+        mShufflingAdapter.setData(sList);
+        mShuffling.setAdapter(mShufflingAdapter);
+        mShuffling.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int realPosition = 0;
+                if (mShufflingAdapter.getDataRealSize() != 0) {
+                    realPosition = position % mShufflingAdapter.getDataRealSize();
+                }
+                selectedPoint(realPosition);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        mLinearLayout = (LinearLayout)view.findViewById(R.id.points);
+        initPoints();
+        mShuffling.setCurrentItem(mShufflingAdapter.getDataRealSize() * 100 - 1, false);
+
+
+
+
+
+
         registerListener();
 
         initDatas();
         initAdapter();
-
+        mHandler = new Handler();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     private void registerListener(){
@@ -196,6 +278,30 @@ public class HomeFragment extends Fragment implements SearchTitleBar.OnSearchTit
     }
 
 
+    private void initPoints() {
+        for (int i = 0; i < mShufflingAdapter.getDataRealSize(); i++) {
+            View point = new View(getActivity());
+            point.setBackgroundResource(R.drawable.shape_point_normal);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(40, 40);
+            params.leftMargin = 20;
+            point.setLayoutParams(params);
+            mLinearLayout.addView(point);
+        }
+    }
+
+    private void selectedPoint(int realPosition) {
+
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            View point = mLinearLayout.getChildAt(i);
+            if (i == realPosition) {
+                point.setBackgroundResource(R.drawable.shape_point_selected);
+            } else {
+                point.setBackgroundResource(R.drawable.shape_point_normal);
+            }
+        }
+
+
+    }
 
     @Override
     public void onStart() {
