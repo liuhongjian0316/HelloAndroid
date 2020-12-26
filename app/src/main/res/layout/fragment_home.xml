@@ -10,11 +10,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
-        <ListView android:layout_width="match_parent" android:layout_height="match_parent"
-            android:id="@+id/list_function"/>
 
         <!--搜索栏-->
-        <include layout="@layout/activity_search_title_bar"/>
+        <include layout="@layout/activity_search_title_bar" />
+        <!--banner-->
+        <work.aijiu.helloandroid.widget.viewpager.adapter.MyViewPager
+            android:id="@+id/shuffling"
+            android:layout_width="match_parent"
+            android:layout_height="162dp" />
+
+        <LinearLayout
+            android:id="@+id/points"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+
+        <ListView android:layout_width="match_parent" android:layout_height="match_parent"
+            android:id="@+id/list_function"/>
 
 
 

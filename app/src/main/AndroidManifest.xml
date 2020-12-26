@@ -29,6 +29,11 @@
         <activity android:name=".ui.title_bar.SearchTitleBarActivity">
         </activity>
         <activity android:name=".ui.title_bar.SearchDetailActivity"></activity>
+
+        <!--组件选择页面-->
+        <activity android:name=".ui.activity.component.ComponentActivity"/>
+        <!--TextView组件界面-->
+        <activity android:name=".ui.activity.component.textview.TextViewActivity"/>
     </application>
 
 </manifest>

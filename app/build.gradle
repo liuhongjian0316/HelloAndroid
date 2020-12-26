@@ -28,6 +28,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+//    sourceSets {
+//        main {
+//            res.srcDirs =
+//                    [
+//                            'src/main/res/layout/component',
+//                            'src/main/res'
+//                    ]
+//        }
+//    }
 }
 
 dependencies {
@@ -56,6 +65,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     //解决android4.4分包机制
     implementation 'com.android.support:multidex:1.0.1'
+    //代码高亮
+    implementation 'thereisnospon.codeview:codeview:0.3.1'
+
 
 
 }

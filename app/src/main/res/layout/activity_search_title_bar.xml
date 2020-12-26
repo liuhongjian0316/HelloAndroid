@@ -7,7 +7,34 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <work.aijiu.helloandroid.widget.viewpager.adapter.MyViewPager
+            android:id="@+id/shuffling"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"/>
+
+        <LinearLayout
+            android:id="@+id/points"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#959292">
+        </LinearLayout>
+
+        <ListView android:layout_width="match_parent" android:layout_height="match_parent"
+            android:id="@+id/list_function"/>
+    </LinearLayout>
+
 
     <work.aijiu.helloandroid.widget.title_bar.SearchTitleBar
         android:id="@+id/search_title_bar"

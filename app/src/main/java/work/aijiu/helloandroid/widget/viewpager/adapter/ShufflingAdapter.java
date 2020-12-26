@@ -15,6 +15,7 @@ public class ShufflingAdapter extends PagerAdapter {
 
     private static final String TAG = "ShufflingAdapter";
     private List<Integer> mList;
+    private View.OnClickListener listener;
 
     @Override
     public int getCount() {
@@ -32,6 +33,8 @@ public class ShufflingAdapter extends PagerAdapter {
         ImageView imageView = new ImageView(container.getContext());
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setImageResource(mList.get(realPosition));
+        imageView.setOnClickListener(listener);
+        imageView.setVerticalScrollbarPosition(realPosition);
         container.addView(imageView);
         return imageView;
     }
@@ -58,6 +61,10 @@ public class ShufflingAdapter extends PagerAdapter {
             return mList.size();
         }
         return 0;
+    }
+
+    public void setListener(View.OnClickListener listener) {
+        this.listener = listener;
     }
 }
 
