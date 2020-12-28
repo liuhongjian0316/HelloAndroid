@@ -37,11 +37,32 @@
                 android:layout_height="match_parent">
             </com.bin.david.form.core.SmartTable>
 
+            <TextView
+                android:id="@+id/desciption_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </TextView>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/my_button_round"
+                android:text="原始按钮"
+                android:textColor="@color/white"/>
+
+            <thereisnospon.codeview.CodeView
+                android:id="@+id/buttonCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </thereisnospon.codeview.CodeView>
 
 
         </LinearLayout>
 
 
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

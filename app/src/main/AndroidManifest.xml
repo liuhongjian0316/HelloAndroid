@@ -34,6 +34,11 @@
         <activity android:name=".ui.activity.component.ComponentActivity"/>
         <!--TextView组件界面-->
         <activity android:name=".ui.activity.component.textview.TextViewActivity"/>
+        <!--editText组件界面-->
+        <activity android:name=".ui.activity.component.edittext.EditTextActivity"/>
+        <!--button组件页面-->
+        <activity android:name=".ui.activity.component.button.ButtonActivity"/>
+
     </application>
 
 </manifest>

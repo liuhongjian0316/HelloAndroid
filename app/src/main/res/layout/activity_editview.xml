@@ -37,11 +37,42 @@
                 android:layout_height="match_parent">
             </com.bin.david.form.core.SmartTable>
 
+            <TextView
+                android:id="@+id/desciption_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </TextView>
+
+
+            <EditText
+                android:id="@+id/aijiu_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dip"
+                android:layout_marginLeft="20dip"
+                android:backgroundTint="@color/black"
+                android:background="@drawable/my_edit_round"
+                android:minHeight="40dp"
+                android:inputType="number"
+                android:ems="10"
+                android:textColorHint="#b3b3b3"
+                android:gravity="center"
+                android:hint="EditText"
+                android:textColor="#b3b3b3"></EditText>
+
+            <thereisnospon.codeview.CodeView
+                android:id="@+id/editCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </thereisnospon.codeview.CodeView>
 
 
         </LinearLayout>
 
 
     </ScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

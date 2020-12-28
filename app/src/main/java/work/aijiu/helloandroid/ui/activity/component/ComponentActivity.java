@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import work.aijiu.helloandroid.R;
 import work.aijiu.helloandroid.base.Constant;
+import work.aijiu.helloandroid.ui.activity.component.button.ButtonActivity;
+import work.aijiu.helloandroid.ui.activity.component.edittext.EditTextActivity;
 import work.aijiu.helloandroid.ui.activity.component.textview.TextViewActivity;
 import work.aijiu.helloandroid.widget.gridview.MyGridAdapter;
 import work.aijiu.helloandroid.widget.gridview.MyGridView;
@@ -77,8 +80,16 @@ public class ComponentActivity extends AppCompatActivity {
                 switch ((int) id){
                     case 0:
                         mIntent = new Intent(ComponentActivity.this, TextViewActivity.class);
-                        startActivity(mIntent);
                         break;
+                    case 1:
+                        mIntent = new Intent(ComponentActivity.this, EditTextActivity.class);
+                        break;
+                    case 2:
+                        mIntent = new Intent(ComponentActivity.this, ButtonActivity.class);
+                        break;
+                }
+                if(mIntent != null){
+                    startActivity(mIntent);
                 }
 //                Toast.makeText(mContext, "你点击了第" + position + "项", Toast.LENGTH_SHORT).show();
             }
@@ -87,6 +98,4 @@ public class ComponentActivity extends AppCompatActivity {
 
         gridview.setOnItemClickListener(myItemClickListener);
     }
-
-
 }
