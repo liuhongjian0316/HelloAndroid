@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +48,7 @@ import work.aijiu.helloandroid.model.TableBean;
  * @UpdateRemark: 更新说明
  * @Version: 1.0
  */
-public class ButtonActivity extends Activity {
+public class ButtonActivity extends Activity{
 
     @BindView(R.id.codeview)
     CodeView codeView;
@@ -79,7 +80,10 @@ public class ButtonActivity extends Activity {
      */
     float screenWidth, screenHeight;
 
+    @BindView(R.id.ex_btn1)
+    Button btn1;
 
+    private View.OnClickListener mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +95,8 @@ public class ButtonActivity extends Activity {
         //初始化
         init();
     }
+
+
 
 
     /**
@@ -166,11 +172,19 @@ public class ButtonActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ButtonActivity.this,"触发点击事件",Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+
+        Log.e(Constant.LOG_TAG,event.getX()+"");
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             downX = event.getX();
 
@@ -228,4 +242,6 @@ public class ButtonActivity extends Activity {
     private void rebackToLeft(float moveDistanceX){
         ObjectAnimator.ofFloat(decorView, "X", moveDistanceX, 0).setDuration(300).start();
     }
+
+
 }

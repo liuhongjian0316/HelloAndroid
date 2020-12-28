@@ -50,6 +50,7 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/my_button_round"
                 android:text="原始按钮"
+                android:id="@+id/ex_btn1"
                 android:textColor="@color/white"/>
 
             <thereisnospon.codeview.CodeView
