@@ -83,7 +83,6 @@ public class ButtonActivity extends Activity{
     @BindView(R.id.ex_btn1)
     Button btn1;
 
-    private View.OnClickListener mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
